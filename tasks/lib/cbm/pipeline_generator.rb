@@ -88,7 +88,7 @@ module Cbm
       binding_class = Class.new
       binding_class.class_eval(
         <<-BINDING_CLASS
-          attr_accessor :uri, :branch_name
+          attr_accessor :uri, :branch_name, :sanitized_branch_name
           def get_binding
              binding()
           end
@@ -122,6 +122,7 @@ module Cbm
         erb_binding = binding_class.new
         erb_binding.uri = git_uri
         erb_binding.branch_name = branch
+        erb_binding.sanitized_branch_name = branch.gsub(/\//, '_')
         entry_yml = ERB.new(template).result(erb_binding.get_binding)
         yield(branch, entry_yml) if block
         entries_memo.concat(entry_yml)
