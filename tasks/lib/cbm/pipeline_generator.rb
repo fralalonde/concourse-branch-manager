@@ -11,7 +11,7 @@ module Cbm
 
     # TODO: do http://www.refactoring.com/catalog/introduceParameterObject.html
     # rubocop:disable Metrics/LineLength, Metrics/ParameterLists
-    def initialize(git_uri, branches, private_key, resource_template_file, job_template_file, common_resource_template_file, group_per_branch)
+    def initialize(git_uri, private_key, branches, resource_template_file, job_template_file, common_resource_template_file, group_per_branch)
       @git_uri = git_uri
       @private_key = private_key
       @branches = branches
