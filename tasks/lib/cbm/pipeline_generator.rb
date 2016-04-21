@@ -6,13 +6,14 @@ module Cbm
   # Generates pipeline yml based on branches
   class PipelineGenerator
     include Logger
-    attr_reader :git_uri, :branches, :resource_template_file, :job_template_file
+    attr_reader :git_uri, :private_key, :branches, :resource_template_file, :job_template_file
     attr_reader :common_resource_template_file, :group_per_branch
 
     # TODO: do http://www.refactoring.com/catalog/introduceParameterObject.html
     # rubocop:disable Metrics/LineLength, Metrics/ParameterLists
-    def initialize(git_uri, branches, resource_template_file, job_template_file, common_resource_template_file, group_per_branch)
+    def initialize(git_uri, branches, private_key, resource_template_file, job_template_file, common_resource_template_file, group_per_branch)
       @git_uri = git_uri
+      @private_key = private_key
       @branches = branches
       @resource_template_file = resource_template_file
       @job_template_file = job_template_file
@@ -88,7 +89,7 @@ module Cbm
       binding_class = Class.new
       binding_class.class_eval(
         <<-BINDING_CLASS
-          attr_accessor :uri, :branch_name
+          attr_accessor :uri, :branch_name, :private_key
           def get_binding
              binding()
           end
@@ -112,6 +113,7 @@ module Cbm
       template = open(template_file).read
       erb_binding = binding_class.new
       erb_binding.uri = git_uri
+      erb_binding.private_key = private_key
       ERB.new(template).result(erb_binding.get_binding)
     end
 
@@ -122,6 +124,7 @@ module Cbm
         erb_binding = binding_class.new
         erb_binding.uri = git_uri
         erb_binding.branch_name = branch
+        erb.binding.private_key = private_key
         entry_yml = ERB.new(template).result(erb_binding.get_binding)
         yield(branch, entry_yml) if block
         entries_memo.concat(entry_yml)
