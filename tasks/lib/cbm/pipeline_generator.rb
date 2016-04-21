@@ -124,7 +124,7 @@ module Cbm
         erb_binding = binding_class.new
         erb_binding.uri = git_uri
         erb_binding.branch_name = branch
-        erb.binding.private_key = private_key
+        erb_binding.private_key = private_key
         entry_yml = ERB.new(template).result(erb_binding.get_binding)
         yield(branch, entry_yml) if block
         entries_memo.concat(entry_yml)
