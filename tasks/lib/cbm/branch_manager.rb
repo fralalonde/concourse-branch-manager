@@ -31,6 +31,7 @@ module Cbm
 
       pipeline_file = Cbm::PipelineGenerator.new(
         git_uri,
+        pipeline_name,
         branches,
         resource_template_file,
         job_template_file,
